@@ -176,7 +176,7 @@ class SamsungNotesApp(App):
                 card.checkmark = Label(
                     text='',
                     font_size=dp(18),
-                    font_name='fonts/NotoEmoji-VariableFont_wght.ttf',
+                    font_name='Arial',
                     color=(1, 1, 1, 1),
                     pos=(card.x + card_width - dp(32) + dp(5), card.y + card.height - dp(32) + dp(3)),
                     size=(dp(18), dp(18)),
@@ -283,22 +283,18 @@ class SamsungNotesApp(App):
         card.is_selected = not card.is_selected
         if card.is_selected:
             self.selected_cards.add(card)
-            with card.canvas.after:
-                Color(0.2, 0.8, 0.2, 1)  # Зеленый цвет круга
-                card.checkmark_bg = Ellipse(
-                    pos=(card.x + card.width - dp(32), card.y + card.height - dp(32)),
-                    size=(dp(28), dp(28))
-                )
-            card.checkmark.text = '✓'
+            # Добавляем только галочку
+            card.checkmark.text = '✔'
+            card.checkmark.font_name = 'fonts/NotoEmoji-VariableFont_wght.ttf'
+            card.checkmark.color = (0.2, 0.8, 0.2, 1)  # Зелёный цвет самой галочки
+            # Устанавливаем позицию галочки в правом верхнем углу
+            card.checkmark.pos = (card.x + card.width - dp(32), card.y + card.height - dp(32))
         else:
             self.selected_cards.remove(card) if card in self.selected_cards else None
-            with card.canvas.after:
-                Color(0, 0, 0, 0)  # Прозрачный цвет
-                card.checkmark_bg = Ellipse(
-                    pos=(card.x + card.width - dp(32), card.y + card.height - dp(32)),
-                    size=(dp(28), dp(28))
-                )
-            card.checkmark.text = ''
+            card.checkmark.text = ''  # Убираем галочку
+
+        # Обновляем интерфейс
+        card.canvas.ask_update()
 
         if self.selected_cards:
             self._show_delete_panel()
